@@ -11,10 +11,11 @@ var Greeter = React.createClass({
     };
   },
   onButtonClick: function (e){
+//prevents reload so input name is shown and not default
     e.preventDefault();
-
     var nameRef = this.refs.name;
     var name = nameRef.value;
+//resets input to be empty
     nameRef.value = '';
     if (typeof name === 'string' && name.length > 0){
       this.setState({
@@ -29,7 +30,6 @@ var Greeter = React.createClass({
       <div>
         <h1>Hello {name}!</h1>
         <p>{message + '!!'}!</p>
-
         <form onSubmit={this.onButtonClick}>
           <input type="text" ref="name"></input>
           <button>Set Name</button>
@@ -38,9 +38,7 @@ var Greeter = React.createClass({
     );
   }
 });
-
 var firstName = 'Christina';
-
 ReactDOM.render(
   <Greeter name={firstName} message={'I am learning react'}/>,
   document.getElementById('app')
