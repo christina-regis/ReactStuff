@@ -1,3 +1,43 @@
+
+// props get passed into a component as you initialize it
+// a component shouldn't update it's own props
+// state is internally maintained and updated by the component
+// a component can update its own state
+//presentational component- do not have states
+var GreeterMessage = React.createClass({
+  render: function(){
+    var name = this.props.name;
+    var message = this.props.message
+    return(
+      <div>
+        <h1>Hello {name}!</h1>
+        <p>{message}</p>
+    </div>
+  );
+  }
+})
+
+var GreeterForm = React.createClass({
+  onFormSubmit: function(e){
+    e.preventDefault();
+    
+    var name = this.refs.name.value;
+
+    if(name.length > 0){
+      this.refs.name.value ='';
+      this.props.onNewName(name);
+    }
+  },
+  render: function(){
+    return(
+      <form onSubmit={this.onFormSubmit}>
+        <input type="text" ref="name"></input>
+        <button>Set Nombre</button>
+      </form>
+    );
+  }
+})
+//container component- have states
 var Greeter = React.createClass({
   getDefaultProps: function (){
     return {
@@ -10,36 +50,27 @@ var Greeter = React.createClass({
       name: this.props.name
     };
   },
-  onButtonClick: function (e){
-//prevents reload so input name is shown and not default
-    e.preventDefault();
-    var nameRef = this.refs.name;
-    var name = nameRef.value;
-//resets input to be empty
-    nameRef.value = '';
-    if (typeof name === 'string' && name.length > 0){
-      this.setState({
-        name: name
-      });
-    }
+  handleNewName: function (name){
+    this.setState({
+      name: name
+    });
   },
   render: function(){
     var name = this.state.name;
     var message = this.props.message;
     return (
       <div>
-        <h1>Hello {name}!</h1>
-        <p>{message + '!!'}!</p>
-        <form onSubmit={this.onButtonClick}>
-          <input type="text" ref="name"></input>
-          <button>Set Name</button>
-        </form>
+
+        <GreeterMessage name={name} message={message}/>
+
+        <GreeterForm onNewName={this.handleNewName}/>
+
       </div>
     );
   }
 });
 var firstName = 'Christina';
 ReactDOM.render(
-  <Greeter name={firstName} message={'I am learning react'}/>,
+  <Greeter name={firstName} message={'This is the default message'}/>,
   document.getElementById('app')
 );
